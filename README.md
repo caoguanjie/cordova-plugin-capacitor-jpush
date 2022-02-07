@@ -1,21 +1,6 @@
-# 集成厂商推送
-修改`plugin.xml`#394行附近参数为自己应用后台的信息即可。
-
-具体可参见`src/android/third-push`目录下的`xx厂商集成指南.md`
-
-# JPush PhoneGap / Cordova Plugin
-
-[![Build Status](https://travis-ci.org/jpush/cordova-plugin-capacitor-jpush.git.svg?branch=master)](https://travis-ci.org/jpush/cordova-plugin-capacitor-jpush.git)
-[![release](https://img.shields.io/badge/release-3.4.1-blue.svg)](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/releases)
-[![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git)
-[![weibo](https://img.shields.io/badge/weibo-JPush-blue.svg)](http://weibo.com/jpush?refer_flag=1001030101_&is_all=1)
-
-极光官方支持的 cordova 推送插件。
-
-- 如需要 IM 功能的插件，可关注 [jmessage-phonegap-plugin](https://github.com/jpush/jmessage-phonegap-plugin)
-- 如需要短信验证码功能插件，可关注 [cordova-plugin-jsms](https://github.com/jpush/cordova-plugin-jsms)
-- 如需要统计分析功能插件，可关注 [cordova-plugin-janalytics](https://github.com/jpush/cordova-plugin-janalytics)
-
+# 极光官方支持的 cordova 推送插件
+>注意本插件是从官方的渠道fork下来的代码，然后集成了产商推送，解决了在capacitor平台上，ios报错等问题
+>
 >注意：插件从 v3.4.0 开始支持 cordova-android 7.0.0，因 cordova-android 7.0.0 修改了 Android 项目结构，因此不兼容之前的版本，升级前请务必注意。
 >
 >如果需要在cordova-android 7.0.0之前版本集成最新插件，参照[这篇文章](https://www.jianshu.com/p/23b117ca27a6)
@@ -23,7 +8,21 @@
 >如果需要安装之前版本的插件，请先安装 v1.2.0 以下版本（建议安装 v1.1.12）的 [cordova-plugin-jcore](https://github.com/jpush/cordova-plugin-jcore)，再安装旧版本插件（比如 v3.3.2），否则运行会报错。
 >
 >[Cordova Android版本与原生版本对应表](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#requirements-and-support)
-## Install
+
+# 集成厂商推送
+修改`plugin.xml`#394行附近参数为自己应用后台的信息即可。
+
+具体可参见`src/android/third-push`目录下的`xx厂商集成指南.md`
+
+## Capacitor Install
+
+```shell
+npm install cordova-plugin-capacitor-jpush
+ionic cap sync android 
+# npx cap sync android
+```
+
+## Cordova Install
 
 > 注意：
 > - 应用的包名一定要和 APP_KEY 对应应用的包名一致，否则极光推送服务无法注册成功。
@@ -73,18 +72,21 @@
 如果使用了 Ionic，可以再安装 @jiguang-ionic/jpush 包，适配 ionic-native：
 
 ```shell
-npm install --save @jiguang-ionic/jpush@1.0.2
+# 使用ionic4+，vue的项目
+npm install --save @jiguang-ionic/jpush@2.0.0 
 
-# npm install --save @jiguang-ionic/jpush@2.0.0 for ionic4+
+
+# npm install --save @jiguang-ionic/jpush@1.0.2 for  ionic2 or ionic3
 ```
 
-然后在 *app.module.ts* 中增加：
+然后在 *Vue的项目* 中增加：
 
 ```js
-// @jiguang-ionic/jpush@1.0.0+
+// 使用vue、react的项目
 import { JPush } from '@jiguang-ionic/jpush';
+JPush.init();
 
-// @jiguang-ionic/jpush@2.0.0+
+// @jiguang-ionic/jpush@2.0.0+，适合angular的项目
 import { JPush } from '@jiguang-ionic/jpush/ngx';
 ...
   providers: [
@@ -94,7 +96,6 @@ import { JPush } from '@jiguang-ionic/jpush/ngx';
   ]
 ```
 
-具体可参考 ./ionic/example 中的文件。
 
 
 ## Usage
@@ -105,17 +106,6 @@ import { JPush } from '@jiguang-ionic/jpush/ngx';
 - [iOS](/doc/iOS_API.md)
 - [Android](/doc/Android_detail_api.md)
 
-### Demo
-
-插件项目中包含一个简单的 Demo。若想参考，可以在 */example* 文件夹内找到并拷贝以下文件:
-
-    example/index.html -> www/index.html
-    example/css/* -> www/css
-    example/js/* -> www/js
-
-### 关于 PhoneGap build 云服务
-
-该项目基于 Cordova 实现，目前无法使用 PhoneGap build 云服务进行打包，建议使用本地环境进行打包。
 
 ## FAQ
 
