@@ -1,0 +1,59 @@
+{
+  "_from": "https://gitee.com/lywp/jpush-phonegap-plugin.git",
+  "_id": "jpush-phonegap-plugin@3.7.3",
+  "_inBundle": false,
+  "_integrity": "sha512-thT36qda16240vQxHbG7ToagNvkfI4mirfdaYZau6NzOHeFYA/N0kjk39XmutlXighG4FkeZtbXuR9daiDbgaw==",
+  "_location": "/jpush-phonegap-plugin",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "remote",
+    "raw": "https://gitee.com/lywp/jpush-phonegap-plugin.git",
+    "rawSpec": "https://gitee.com/lywp/jpush-phonegap-plugin.git",
+    "saveSpec": "https://gitee.com/lywp/jpush-phonegap-plugin.git",
+    "fetchSpec": "https://gitee.com/lywp/jpush-phonegap-plugin.git"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://gitee.com/lywp/jpush-phonegap-plugin.git",
+  "_shasum": "71e2608fba6226a2c7816df54061e87fc156c645",
+  "_spec": "https://gitee.com/lywp/jpush-phonegap-plugin.git",
+  "_where": "/Users/fits-vue/Documents/Trunk",
+  "author": {
+    "name": "JiGuang"
+  },
+  "bugs": {
+    "url": "https://github.com/jpush/jpush-phonegap-plugin/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "jpush-phonegap-plugin",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "JPush for cordova plugin",
+  "devDependencies": {
+    "cordova-plugin-device": "*",
+    "cordova-plugin-jcore": ">=1.3.0"
+  },
+  "homepage": "https://github.com/jpush/jpush-phonegap-plugin#readme",
+  "keywords": [
+    "JPush",
+    "push",
+    "Push",
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
+  ],
+  "license": "MIT",
+  "name": "jpush-phonegap-plugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpush/jpush-phonegap-plugin.git"
+  },
+  "version": "3.7.3"
+}
