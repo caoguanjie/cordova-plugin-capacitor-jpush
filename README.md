@@ -5,9 +5,9 @@
 
 # JPush PhoneGap / Cordova Plugin
 
-[![Build Status](https://travis-ci.org/jpush/jpush-phonegap-plugin.svg?branch=master)](https://travis-ci.org/jpush/jpush-phonegap-plugin)
-[![release](https://img.shields.io/badge/release-3.4.1-blue.svg)](https://github.com/jpush/jpush-phonegap-plugin/releases)
-[![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/jpush/jpush-phonegap-plugin)
+[![Build Status](https://travis-ci.org/jpush/cordova-plugin-capacitor-jpush.git.svg?branch=master)](https://travis-ci.org/jpush/cordova-plugin-capacitor-jpush.git)
+[![release](https://img.shields.io/badge/release-3.4.1-blue.svg)](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/releases)
+[![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git)
 [![weibo](https://img.shields.io/badge/weibo-JPush-blue.svg)](http://weibo.com/jpush?refer_flag=1001030101_&is_all=1)
 
 极光官方支持的 cordova 推送插件。
@@ -32,13 +32,13 @@
 - 通过 Cordova Plugins 安装，要求 Cordova CLI 5.0+：
 
   ```shell
-  cordova plugin add jpush-phonegap-plugin --variable APP_KEY=your_jpush_appkey
+  cordova plugin add cordova-plugin-capacitor-jpush.git --variable APP_KEY=your_jpush_appkey
   ```
 
 - 或直接通过 url 安装：
 
   ```shell
-  cordova plugin add https://github.com/jpush/jpush-phonegap-plugin.git --variable APP_KEY=your_jpush_appkey
+  cordova plugin add https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git --variable APP_KEY=your_jpush_appkey
   ```
 
 - 或下载到本地安装：
@@ -65,7 +65,7 @@
   - 同时动态配置 APP_KEY 和 CHANNEL 示例
 
     ```shell
-    cordova plugin add jpush-phonegap-plugin --variable APP_KEY=your_jpush_appkey --variable CHANNEL=your_channel
+    cordova plugin add cordova-plugin-capacitor-jpush.git --variable APP_KEY=your_jpush_appkey --variable CHANNEL=your_channel
     ```
 
 ### Ionic
@@ -119,7 +119,7 @@ import { JPush } from '@jiguang-ionic/jpush/ngx';
 
 ## FAQ
 
-> 如果遇到了疑问，请优先参考 Demo 和 API 文档。若还无法解决，可到 [Issues](https://github.com/jpush/jpush-phonegap-plugin/issues) 提问。
+> 如果遇到了疑问，请优先参考 Demo 和 API 文档。若还无法解决，可到 [Issues](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues) 提问。
 
 ### Android
 
@@ -138,7 +138,7 @@ Android 因为各 Rom 的高度定制化，不像 iOS 一样能有一个统一�
 
 #### 如何让通知内容像 iOS 一样自动换行展示？
 
-[#267](https://github.com/jpush/jpush-phonegap-plugin/issues/267)
+[#267](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues/267)
 
 #### 关闭 App 后收不到通知
 
@@ -191,7 +191,7 @@ cordova platform update ios
 
 ## Contribute
 
-Please contribute! [Look at the issues](https://github.com/jpush/jpush-phonegap-plugin/issues).
+Please contribute! [Look at the issues](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues).
 
 ## License
 

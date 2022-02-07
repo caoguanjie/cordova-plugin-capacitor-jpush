@@ -665,7 +665,7 @@ window.JPush.addNotificationActions(actions, categoryId)
 
    ![MediaAttachments_04](res/MediaAttachments_04.png)
 
-3.在 Xcode 工程目录左侧系统自动创建了 jpushNotificationService 文件夹及三个文件，下载本插件目录 `jpush-phonegap-plugin/src/ios/notificationService/` 下的 `NotificationService.h`、`NotificationService.m` 文件，全部复制替换对应文件内代码。
+3.在 Xcode 工程目录左侧系统自动创建了 jpushNotificationService 文件夹及三个文件，下载本插件目录 `cordova-plugin-capacitor-jpush.git/src/ios/notificationService/` 下的 `NotificationService.h`、`NotificationService.m` 文件，全部复制替换对应文件内代码。
 
 4.在 Xcode 中拖拽图片、gif、audio、video 等资源文件至 `jpushNotificationService` 文件夹目录下，弹出菜单选择如下： ![MediaAttachments_06](res/MediaAttachments_06.png)
 

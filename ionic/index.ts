@@ -13,10 +13,10 @@ export interface AliasOptions {
 
 @Plugin({
   pluginName: 'JPush',
-  plugin: 'jpush-phonegap-plugin',
+  plugin: 'cordova-plugin-capacitor-jpush.git',
   pluginRef: 'plugins.jPushPlugin',
-  repo: 'https://github.com/jpush/jpush-phonegap-plugin',
-  install: 'ionic cordova plugin add jpush-phonegap-plugin --variable APP_KEY=your_app_key',
+  repo: 'https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git',
+  install: 'ionic cordova plugin add cordova-plugin-capacitor-jpush.git --variable APP_KEY=your_app_key',
   installVariables: ['APP_KEY'],
   platforms: ['Android', 'iOS']
 })

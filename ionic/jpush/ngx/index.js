@@ -1,20 +1,29 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
+var __extends = (this && this.__extends) || (function() {
+    var extendStatics = function(d, b) {
         extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            ({ __proto__: [] }
+                instanceof Array && function(d, b) { d.__proto__ = b; }) ||
+            function(d, b) {
+                for (var p in b)
+                    if (b.hasOwnProperty(p)) d[p] = b[p];
+            };
         return extendStatics(d, b);
     };
-    return function (d, b) {
+    return function(d, b) {
         extendStatics(d, b);
+
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+var __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    else
+        for (var i = decorators.length - 1; i >= 0; i--)
+            if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 /**
@@ -30,58 +39,59 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
  */
 import { Injectable } from '@angular/core';
 import { IonicNativePlugin, cordova } from '@ionic-native/core';
-var JPush = /** @class */ (function (_super) {
+var JPush = /** @class */ (function(_super) {
     __extends(JPush, _super);
+
     function JPush() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    JPush.prototype.functionName = function (arg1, arg2) { return cordova(this, "functionName", {}, arguments); };
-    JPush.prototype.init = function () { return cordova(this, "init", { "sync": true, "platforms": ["iOS", "Android"] }, arguments); };
-    JPush.prototype.setDebugMode = function (enable) { return cordova(this, "setDebugMode", { "sync": true, "platforms": ["iOS", "Android"] }, arguments); };
-    JPush.prototype.getRegistrationID = function () { return cordova(this, "getRegistrationID", {}, arguments); };
-    JPush.prototype.stopPush = function () { return cordova(this, "stopPush", {}, arguments); };
-    JPush.prototype.resumePush = function () { return cordova(this, "resumePush", {}, arguments); };
-    JPush.prototype.isPushStopped = function () { return cordova(this, "isPushStopped", {}, arguments); };
-    JPush.prototype.setTags = function (params) { return cordova(this, "setTags", {}, arguments); };
-    JPush.prototype.addTags = function (params) { return cordova(this, "addTags", {}, arguments); };
-    JPush.prototype.deleteTags = function (params) { return cordova(this, "deleteTags", {}, arguments); };
-    JPush.prototype.cleanTags = function (params) { return cordova(this, "cleanTags", {}, arguments); };
-    JPush.prototype.getAllTags = function (params) { return cordova(this, "getAllTags", {}, arguments); };
-    JPush.prototype.checkTagBindState = function (params) { return cordova(this, "checkTagBindState", {}, arguments); };
-    JPush.prototype.setAlias = function (params) { return cordova(this, "setAlias", {}, arguments); };
-    JPush.prototype.deleteAlias = function (params) { return cordova(this, "deleteAlias", {}, arguments); };
-    JPush.prototype.getAlias = function (params) { return cordova(this, "getAlias", {}, arguments); };
-    JPush.prototype.getUserNotificationSettings = function () { return cordova(this, "getUserNotificationSettings", {}, arguments); };
-    JPush.prototype.clearLocalNotifications = function () { return cordova(this, "clearLocalNotifications", {}, arguments); };
-    JPush.prototype.setBadge = function (badge) { return cordova(this, "setBadge", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.resetBadge = function () { return cordova(this, "resetBadge", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.setApplicationIconBadgeNumber = function (badge) { return cordova(this, "setApplicationIconBadgeNumber", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.getApplicationIconBadgeNumber = function () { return cordova(this, "getApplicationIconBadgeNumber", {}, arguments); };
-    JPush.prototype.addLocalNotificationForIOS = function (delayTime, content, badge, identifierKey, extras) { return cordova(this, "addLocalNotificationForIOS", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.deleteLocalNotificationWithIdentifierKeyInIOS = function (identifierKey) { return cordova(this, "deleteLocalNotificationWithIdentifierKeyInIOS", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.addDismissActions = function (actions, categoryId) { return cordova(this, "addDismissActions", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.addNotificationActions = function (actions, categoryId) { return cordova(this, "addNotificationActions", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.setLocation = function (latitude, longitude) { return cordova(this, "setLocation", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.startLogPageView = function (pageName) { return cordova(this, "startLogPageView", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.stopLogPageView = function (pageName) { return cordova(this, "stopLogPageView", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.beginLogPageView = function (pageName, duration) { return cordova(this, "beginLogPageView", { "sync": true, "platforms": ["iOS"] }, arguments); };
-    JPush.prototype.getConnectionState = function () { return cordova(this, "getConnectionState", {}, arguments); };
-    JPush.prototype.setBasicPushNotificationBuilder = function () { return cordova(this, "setBasicPushNotificationBuilder", {}, arguments); };
-    JPush.prototype.setCustomPushNotificationBuilder = function () { return cordova(this, "setCustomPushNotificationBuilder", {}, arguments); };
-    JPush.prototype.clearAllNotification = function () { return cordova(this, "clearAllNotification", {}, arguments); };
-    JPush.prototype.clearNotificationById = function (id) { return cordova(this, "clearNotificationById", {}, arguments); };
-    JPush.prototype.setLatestNotificationNum = function (num) { return cordova(this, "setLatestNotificationNum", {}, arguments); };
-    JPush.prototype.addLocalNotification = function (builderId, content, title, notificationId, broadcastTime, extras) { return cordova(this, "addLocalNotification", {}, arguments); };
-    JPush.prototype.removeLocalNotification = function (notificationId) { return cordova(this, "removeLocalNotification", {}, arguments); };
-    JPush.prototype.reportNotificationOpened = function (msgId) { return cordova(this, "reportNotificationOpened", {}, arguments); };
-    JPush.prototype.requestPermission = function () { return cordova(this, "requestPermission", {}, arguments); };
-    JPush.prototype.setSilenceTime = function (startHour, startMinute, endHour, endMinute) { return cordova(this, "setSilenceTime", {}, arguments); };
-    JPush.prototype.setPushTime = function (weekdays, startHour, endHour) { return cordova(this, "setPushTime", {}, arguments); };
+    JPush.prototype.functionName = function(arg1, arg2) { return cordova(this, "functionName", {}, arguments); };
+    JPush.prototype.init = function() { return cordova(this, "init", { "sync": true, "platforms": ["iOS", "Android"] }, arguments); };
+    JPush.prototype.setDebugMode = function(enable) { return cordova(this, "setDebugMode", { "sync": true, "platforms": ["iOS", "Android"] }, arguments); };
+    JPush.prototype.getRegistrationID = function() { return cordova(this, "getRegistrationID", {}, arguments); };
+    JPush.prototype.stopPush = function() { return cordova(this, "stopPush", {}, arguments); };
+    JPush.prototype.resumePush = function() { return cordova(this, "resumePush", {}, arguments); };
+    JPush.prototype.isPushStopped = function() { return cordova(this, "isPushStopped", {}, arguments); };
+    JPush.prototype.setTags = function(params) { return cordova(this, "setTags", {}, arguments); };
+    JPush.prototype.addTags = function(params) { return cordova(this, "addTags", {}, arguments); };
+    JPush.prototype.deleteTags = function(params) { return cordova(this, "deleteTags", {}, arguments); };
+    JPush.prototype.cleanTags = function(params) { return cordova(this, "cleanTags", {}, arguments); };
+    JPush.prototype.getAllTags = function(params) { return cordova(this, "getAllTags", {}, arguments); };
+    JPush.prototype.checkTagBindState = function(params) { return cordova(this, "checkTagBindState", {}, arguments); };
+    JPush.prototype.setAlias = function(params) { return cordova(this, "setAlias", {}, arguments); };
+    JPush.prototype.deleteAlias = function(params) { return cordova(this, "deleteAlias", {}, arguments); };
+    JPush.prototype.getAlias = function(params) { return cordova(this, "getAlias", {}, arguments); };
+    JPush.prototype.getUserNotificationSettings = function() { return cordova(this, "getUserNotificationSettings", {}, arguments); };
+    JPush.prototype.clearLocalNotifications = function() { return cordova(this, "clearLocalNotifications", {}, arguments); };
+    JPush.prototype.setBadge = function(badge) { return cordova(this, "setBadge", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.resetBadge = function() { return cordova(this, "resetBadge", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.setApplicationIconBadgeNumber = function(badge) { return cordova(this, "setApplicationIconBadgeNumber", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.getApplicationIconBadgeNumber = function() { return cordova(this, "getApplicationIconBadgeNumber", {}, arguments); };
+    JPush.prototype.addLocalNotificationForIOS = function(delayTime, content, badge, identifierKey, extras) { return cordova(this, "addLocalNotificationForIOS", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.deleteLocalNotificationWithIdentifierKeyInIOS = function(identifierKey) { return cordova(this, "deleteLocalNotificationWithIdentifierKeyInIOS", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.addDismissActions = function(actions, categoryId) { return cordova(this, "addDismissActions", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.addNotificationActions = function(actions, categoryId) { return cordova(this, "addNotificationActions", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.setLocation = function(latitude, longitude) { return cordova(this, "setLocation", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.startLogPageView = function(pageName) { return cordova(this, "startLogPageView", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.stopLogPageView = function(pageName) { return cordova(this, "stopLogPageView", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.beginLogPageView = function(pageName, duration) { return cordova(this, "beginLogPageView", { "sync": true, "platforms": ["iOS"] }, arguments); };
+    JPush.prototype.getConnectionState = function() { return cordova(this, "getConnectionState", {}, arguments); };
+    JPush.prototype.setBasicPushNotificationBuilder = function() { return cordova(this, "setBasicPushNotificationBuilder", {}, arguments); };
+    JPush.prototype.setCustomPushNotificationBuilder = function() { return cordova(this, "setCustomPushNotificationBuilder", {}, arguments); };
+    JPush.prototype.clearAllNotification = function() { return cordova(this, "clearAllNotification", {}, arguments); };
+    JPush.prototype.clearNotificationById = function(id) { return cordova(this, "clearNotificationById", {}, arguments); };
+    JPush.prototype.setLatestNotificationNum = function(num) { return cordova(this, "setLatestNotificationNum", {}, arguments); };
+    JPush.prototype.addLocalNotification = function(builderId, content, title, notificationId, broadcastTime, extras) { return cordova(this, "addLocalNotification", {}, arguments); };
+    JPush.prototype.removeLocalNotification = function(notificationId) { return cordova(this, "removeLocalNotification", {}, arguments); };
+    JPush.prototype.reportNotificationOpened = function(msgId) { return cordova(this, "reportNotificationOpened", {}, arguments); };
+    JPush.prototype.requestPermission = function() { return cordova(this, "requestPermission", {}, arguments); };
+    JPush.prototype.setSilenceTime = function(startHour, startMinute, endHour, endMinute) { return cordova(this, "setSilenceTime", {}, arguments); };
+    JPush.prototype.setPushTime = function(weekdays, startHour, endHour) { return cordova(this, "setPushTime", {}, arguments); };
     JPush.pluginName = "JPush";
-    JPush.plugin = "jpush-phonegap-plugin";
+    JPush.plugin = "cordova-plugin-capacitor-jpush.git";
     JPush.pluginRef = "plugins.jPushPlugin";
-    JPush.repo = "https://github.com/jpush/jpush-phonegap-plugin";
-    JPush.install = "ionic cordova plugin add jpush-phonegap-plugin --variable APP_KEY=your_app_key";
+    JPush.repo = "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git";
+    JPush.install = "ionic cordova plugin add cordova-plugin-capacitor-jpush.git --variable APP_KEY=your_app_key";
     JPush.installVariables = ["APP_KEY"];
     JPush.platforms = ["Android", "iOS"];
     JPush = __decorate([
