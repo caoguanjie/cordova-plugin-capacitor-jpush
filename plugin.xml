@@ -10,7 +10,7 @@
     <keywords>JPush,push</keywords>
     <license>MIT License</license>
 
-    <preference name="APP_KEY"  value="59e11ba3fc15afce4c370483"/>
+    <preference name="APP_KEY"  value="JPUSH_APPKEY_VALUE"/>
     <preference name="CHANNEL" default="developer-default" />
 
     <engines>
@@ -389,30 +389,30 @@
 
             <!-- Required  . Enable it you can get statistics data with channel -->
             <meta-data android:name="JPUSH_CHANNEL" android:value="$CHANNEL"/>
-            <meta-data android:name="JPUSH_APPKEY" android:value="59e11ba3fc15afce4c370483" /> <!--  </>值来自开发者平台取得的AppKey-->
+            <meta-data android:name="JPUSH_APPKEY" android:value="JPUSH_APPKEY_VALUE" /> <!--  </>值来自开发者平台取得的AppKey-->
             <!-- 小米Xiaomi推送 start -->
-            <meta-data android:name="XIAOMI_APPKEY" android:value="MI-5462013317069"/>
-            <meta-data android:name="XIAOMI_APPID" android:value="MI-2882303761520133069"/>
+            <meta-data android:name="XIAOMI_APPKEY" android:value="MI-XIAOMI_APPKEY_VALUE"/>
+            <meta-data android:name="XIAOMI_APPID" android:value="MI-XIAOMI_APPID_VALUE"/>
             <!-- 小米Xiaomi推送 end -->
 
             <!-- 华为huawei推送 start-->
-            <meta-data android:name="com.huawei.hms.client.appid" android:value="appid=105427029"/>
+            <meta-data android:name="com.huawei.hms.client.appid" android:value="appid=HUAWEI_APPID"/>
             <!-- 华为huawei推送 end-->
 
             <!-- 魅族meizu推送 start -->
-            <meta-data android:name="MEIZU_APPKEY" android:value="MZ-这里需要替换自己的信息" />
-            <meta-data android:name="MEIZU_APPID" android:value="MZ-这里需要替换自己的信息" />
+            <meta-data android:name="MEIZU_APPKEY" android:value="MZ-MEIZU_APPKEY_VALUE" />
+            <meta-data android:name="MEIZU_APPID" android:value="MZ-MEIZU_APPID_VALUE" />
             <!-- 魅族meizu推送 end -->
 
             <!-- OPPO推送 start -->
-            <meta-data android:name="OPPO_APPID" android:value="OP-这里需要替换自己的信息" />
-            <meta-data android:name="OPPO_APPKEY" android:value="OP-这里需要替换自己的信息" />
-            <meta-data android:name="OPPO_APPSECRET" android:value="OP-这里需要替换自己的信息" />
+            <meta-data android:name="OPPO_APPID" android:value="OP-OPPO_APPID_VALUE" />
+            <meta-data android:name="OPPO_APPKEY" android:value="OP-OPPO_APPKEY_VALUE" />
+            <meta-data android:name="OPPO_APPSECRET" android:value="OP-OPPO_APPSECRET_VALUE" />
             <!-- OPPO推送 end -->
 
             <!-- vivo推送 start -->
-            <meta-data android:name="com.vivo.push.app_id" android:value="105539187" />
-            <meta-data android:name="com.vivo.push.api_key" android:value="9a71d90f1e36283763fa972afc36796e" />
+            <meta-data android:name="com.vivo.push.app_id" android:value="VIVO_APPID_VALUE" />
+            <meta-data android:name="com.vivo.push.api_key" android:value="VIVO_APPKEY_VALUE" />
             <!-- vivo推送 end -->
         </config-file>
 
