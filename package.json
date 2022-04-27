@@ -33,7 +33,7 @@
         "name": "caoguanjie"
     },
     "bugs": {
-        "url": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues"
+        "url": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush/issues"
     },
     "bundleDependencies": false,
     "cordova": {
