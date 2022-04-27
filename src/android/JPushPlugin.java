@@ -9,6 +9,13 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.vivo.push.PushClient;
+import com.xiaomi.mipush.sdk.MiPushClient;
+import com.heytap.msp.push.HeytapPushManager;
+import com.heytap.msp.push.mode.ErrorCode;
+import cn.jpush.android.service.OPushCallback;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
@@ -59,8 +66,9 @@ public class JPushPlugin extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         mContext = cordova.getActivity().getApplicationContext();
+        Log.d(TAG, "initialize plugin");
 
-        JPushInterface.init(mContext);
+        // JPushInterface.init(mContext);
 
         cordovaActivity = cordova.getActivity();
 
@@ -254,6 +262,7 @@ public class JPushPlugin extends CordovaPlugin {
         try {
             mode = data.getBoolean(0);
             JPushInterface.setDebugMode(mode);
+            JLogger.setLoggerEnable(mode);
             callbackContext.success();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -296,6 +305,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("error reading num json");
+            return;
         }
         if (num != -1) {
             JPushInterface.setLatestNotificationNumber(mContext, num);
@@ -332,7 +342,37 @@ public class JPushPlugin extends CordovaPlugin {
     void getRegistrationID(JSONArray data, CallbackContext callbackContext) {
         Context context = mContext;
         String regID = JPushInterface.getRegistrationID(context);
+
+        HeytapPushManager.register(context, "30782743", "8621728011d949219a18f6e1b70fa820", new OPushCallback() {
+            @Override
+            public void onRegister(int i, String s) {
+                super.onRegister(i, s);
+                if (i == ErrorCode.SUCCESS) {
+                    // 註冊成功
+                    Log.e("NPL", "註冊成功，registerId=" + s);
+                } else {
+                    // 註冊失敗
+                    Log.e("NPL", "註冊失敗");
+                }
+            }
+        });
+        String oppo = HeytapPushManager.getRegisterID();
+        Log.d("TAG", "欧派id=" + oppo);
+        String vivo = PushClient.getInstance(context).getRegId();
+        Log.d("TAG", "维沃id=" + vivo);
+        String xiaoMi = MiPushClient.getRegId(context);
+        Log.d("Tag", "当前小米id=" + xiaoMi);
+        String huawei = HmsInstanceId.getInstance(context).getToken();
+        Log.d("Tag", "当前华为id=" + huawei);
+
         callbackContext.success(regID);
+    }
+
+    void getXiaoMiID(JSONArray data, CallbackContext callbackContext) {
+        Context context = mContext;
+        String xiaoMi = MiPushClient.getRegId(context);
+        Log.d("Tag", "当前小米id" + xiaoMi);
+        callbackContext.success(xiaoMi);
     }
 
     void onResume(JSONArray data, CallbackContext callbackContext) {
@@ -364,6 +404,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.setAlias(mContext, sequence, alias);
@@ -379,6 +420,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.deleteAlias(mContext, sequence);
@@ -394,6 +436,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.getAlias(mContext, sequence);
@@ -416,6 +459,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.setTags(mContext, sequence, tags);
@@ -438,6 +482,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.addTags(mContext, sequence, tags);
@@ -460,6 +505,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.deleteTags(mContext, sequence, tags);
@@ -476,6 +522,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.cleanTags(mContext, sequence);
@@ -492,6 +539,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.getAllTags(mContext, sequence);
@@ -510,6 +558,7 @@ public class JPushPlugin extends CordovaPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
             callbackContext.error("Parameters error.");
+            return;
         }
 
         JPushInterface.checkTagBindState(mContext, sequence, tag);
@@ -635,6 +684,30 @@ public class JPushPlugin extends CordovaPlugin {
     void setMaxGeofenceNumber(JSONArray data, CallbackContext callbackContext) throws JSONException {
         int maxNumber = data.getInt(0);
         JPushInterface.setMaxGeofenceNumber(mContext, maxNumber);
+    }
+
+    void setBadgeNumber(JSONArray data, CallbackContext callbackContext) throws JSONException {
+        int badgeNumb = data.getInt(0);
+        JPushInterface.setBadgeNumber(mContext, badgeNumb);
+    }
+
+    void setMobileNumber(JSONArray data, CallbackContext callbackContext) throws JSONException {
+        int sequence = -1;
+        String number = null;
+
+        try {
+            JSONObject params = data.getJSONObject(0);
+            sequence = params.getInt("sequence");
+            number = params.getString("mobileNumber");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            callbackContext.error("Parameters error.");
+            return;
+        }
+
+        eventCallbackMap.put(sequence, callbackContext);
+        JPushInterface.setMobileNumber(mContext, sequence, number);
     }
 
     private boolean isValidHour(int hour) {

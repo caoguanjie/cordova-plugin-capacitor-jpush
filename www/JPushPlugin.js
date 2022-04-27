@@ -63,6 +63,10 @@ JPushPlugin.prototype.getRegistrationID = function(successCallback) {
   this.callNative("getRegistrationID", [], successCallback);
 };
 
+JPushPlugin.prototype.getXiaoMiID = function(successCallback) {
+  this.callNative("getXiaoMiID", [], successCallback);
+};
+
 JPushPlugin.prototype.stopPush = function() {
   this.callNative("stopPush", [], null);
 };

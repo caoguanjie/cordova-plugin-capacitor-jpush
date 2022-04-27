@@ -1,28 +1,41 @@
 {
-    "_from": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git",
+    "_args": [
+        [
+            "cordova-plugin-capacitor-jpush@4.0.0",
+            "C:\\Users\\fits\\Desktop\\MyFrame"
+        ]
+    ],
+    "_from": "file:plugin/cordova-plugin-capacitor-jpush.tar.gz",
+    "_id": "cordova-plugin-capacitor-jpush@4.0.0",
     "_inBundle": false,
-    "_integrity": "sha512-thT36qda16240vQxHbG7ToagNvkfI4mirfdaYZau6NzOHeFYA/N0kjk39XmutlXighG4FkeZtbXuR9daiDbgaw==",
-    "_location": "/cordova-plugin-capacitor-jpush.git",
+    "_integrity": "sha512-6yj1iJ6ygLi4jeivF2LF66T+BkOPH4+0eZyw+B0pCCV2eNvzC+Ilie+isO34CHuppP4tpeyhVX3GmwpyqF9iAQ==",
+    "_location": "/cordova-plugin-capacitor-jpush",
     "_phantomChildren": {},
     "_requested": {
-        "type": "remote",
-        "raw": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git",
-        "rawSpec": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git",
-        "saveSpec": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git",
-        "fetchSpec": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git"
+        "type": "file",
+        "where": "/Users/fits-vue/Documents/Trunk",
+        "raw": "cordova-plugin-capacitor-jpush@file:plugin/cordova-plugin-capacitor-jpush.tar.gz",
+        "name": "cordova-plugin-capacitor-jpush",
+        "escapedName": "cordova-plugin-capacitor-jpush",
+        "rawSpec": "file:plugin/cordova-plugin-capacitor-jpush.tar.gz",
+        "saveSpec": "file:plugin/cordova-plugin-capacitor-jpush.tar.gz",
+        "fetchSpec": "/Users/fits-vue/Documents/Trunk/plugin/cordova-plugin-capacitor-jpush.tar.gz"
     },
     "_requiredBy": [
         "#USER",
         "/"
     ],
-    "_resolved": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git",
-    "_shasum": "71e2608fba6226a2c7816df54061e87fc156c645",
-    "_spec": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git",
+    "_resolved": "/Users/fits-vue/Documents/Trunk/plugin/cordova-plugin-capacitor-jpush.tar.gz",
+    "_shasum": "bf4cff6f64718ebdd2a35d76045b7af68d871194",
+    "_spec": "cordova-plugin-capacitor-jpush@file:plugin/cordova-plugin-capacitor-jpush.tar.gz",
     "_where": "/Users/fits-vue/Documents/Trunk",
-    "author": "caoguanjie",
+    "author": {
+        "name": "caoguanjie"
+    },
     "bugs": {
         "url": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues"
     },
+    "bundleDependencies": false,
     "cordova": {
         "id": "cordova-plugin-capacitor-jpush.git",
         "platforms": [
@@ -36,6 +49,10 @@
         "cordova-plugin-device": "*",
         "cordova-plugin-jcore": ">=1.3.0"
     },
+    "directories": {
+        "doc": "doc",
+        "example": "example"
+    },
     "homepage": "https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git#readme",
     "keywords": [
         "JPush",
@@ -46,18 +63,14 @@
         "cordova-android"
     ],
     "license": "MIT",
+    "main": "index.js",
     "name": "cordova-plugin-capacitor-jpush",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git"
     },
-    "version": "3.7.4",
-    "main": "index.js",
-    "directories": {
-        "doc": "doc",
-        "example": "example"
-    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
-    }
+    },
+    "version": "4.0.0"
 }
