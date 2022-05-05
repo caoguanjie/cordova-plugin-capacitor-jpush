@@ -1,184 +1,132 @@
-# JPush SDK 小米通道集成指南
-
+# JPush SDK VIVO通道集成指南
 
 ## 概述
 
 在国内 Android 生态中，推送通道都是由终端与云端之间的长链接来维持，严重依赖于应用进程的存活状态。如今一些手机厂家会在自家 rom 中做系统级别的推送通道，再由系统分发给各个 app，以此提高在自家 rom 上的推送送达率。
 
-JPush SDK 为了尽可能提高开发者在各类 rom 上的推送送达率，对使用 MIUI 的设备推送，自动切换到小米通道。同时，为了保证 SDK 的易用性，原本 JPush 的所有接口调用逻辑都不用修改,JPush 会对自身支持的功能做兼容.只需在manifest中配置上小米 SDK 必须的配置组件即可.
+JPush SDK 为了尽可能提高开发者在各类 rom 上的推送送达率，对使用 Funtouch 的设备推送，自动切换到 VIVO 通道。同时，为了保证 SDK 的易用性，原本 JPush 的所有接口调用逻辑都不用修改，JPush 会对自身支持的功能做兼容。只需在 manifest 中配置上 VIVO SDK 必须的配置组件即可。
 
 ## 功能描述
 
-+ JPush 初始化的时候可选择是否初始化 MiPush 通道。
++ JPush 初始化的时候可选择是否初始化 VIVO 通道。
 
-+ 在 MIUI 设备上 JPush 通道与 MiPush 通道共存.
++ 在 Funtouch 设备上 JPush 通道与 VIVO 通道共存。
 
-+ MiPush 通道初始化后支持 stopPush/resumePush 与 tag/alias这些 JPush 原有的功能,其它的 JPush 未支持的功能目前暂时还不可用.
++ VIVO 通道初始化后支持 tag/alias这些 JPush 原有的功能，其它的 JPush 未支持的功能目前暂时还不可用。
 
-**注：极光集成小米通道在 JPush Android SDK v4.6.0 兼容 Android12，对应测试的小米 SDK 版本为： V4.9.1**
++ 通知效果：
 
+	* VIVO 通道不支持 ACTION\_NOTIFICATION\_RECEIVED 
+
+*注：* JPush 通过 PushClient.getInstance(context).isSupport() 接口进行判断，对支持的机型，通知走 VIVO 通道，不支持则走极光通道。目前 VIVO 通道支持的机型X23、NEX S 、NEX A、X21i、X21、X20、Y81s、Y83A、x9sp\_8.1、x9s\_8.1、Z1、Y71、X20 Plus、Y85、x9\_8.1、x9Plus_8.1、Y75A、Y79A、Y66i A、X9、x9s、x9P、x9sp。
+*注：若 vivo 未上架，推送测试时需要在 vivo 推送平台添加测试设备，并且只能通过 API 指定推送参数 push_mode 进行下发。
 
 ## 手动配置集成步骤
 
 主要步骤为：
 
-* [1. 增加小米插件包及小米推送包](#1)
+* [1. 增加VIVO插件包及VIVO推送包](#1)
 
-* [2. 配置小米推送sdk所需要的权限](#2)
+* [2. 配置VIVO必须的组件](#3)
 
-* [3. 配置小米必须的组件](#3)
+* [3. 将VIVO\_APPKEY、VIVO\_APPID 替换为在VIVO后台注册对应该应用的AppKey/AppID](#4)
 
-* [4. 配置JPush接受的小米sdk的消息接受类](#4)
-
-* [5. 将XIAOMI_APPKEY与XIAOMI_APPID替换为在小米后台注册对应该应用的AppKey/AppID](#5)
+* [5. 配置自动集成的vivo.gradle](#5)
 
 
-#### <h3 id="1">1. 增加小米插件包及小米推送包</h3>
-* 将third-push目录下找到xiaomi目录，从libs中拷贝其中的jar包至工程的libs目录下。
-* jar包说明：
-  * jpush-android-plugin-xiaomi-v3.x.x.jar:插件包
-  * MiPush_SDK_Client_x_x_x.jar:小米推送包
-* jar包的来源如下：
-![图 2](../../../../doc/res/20220505034314.png)  
+#### <h3 id="1">1. 增加VIVO插件包及VIVO推送包</h3>
++ 将third-push目录下找到vivo目录，从libs中拷贝其中的jar包至工程的libs目录下。
++ jar包说明：
+	* jpush-android-plugin-vivo-v4.x.x.jar : JPush 插件包
+	* push_sdk_v3.0.0.4_484.aar : VIVO 推送包
+	* 注意：aar文件不能通过`plugin.xml`直接导入，需要用到gradle的功能
 
 
+***注1***：极光集成 VIVO 通道在 JPush Android SDK 3.2.0 添加。
+***注2***：当前集成 VIVO 通道集成的jpush版本为： JPush Android SDK 4.6.3。
 
-**注：** 极光集成小米SDK在 JPush Android SDK 3.2.0 有升级，对应测试的小米 SDK 版本为：3.6.12
-**注：** 极光集成小米SDK在 JPush Android SDK 3.3.2 有升级，对应测试的小米 SDK 版本为：3.6.18
-**注：** 极光集成小米SDK在 JPush Android SDK 4.6.0 有升级，对应测试的小米 SDK 版本为：4.9.1
-
-#### <h3 id="2">2. 配置小米推送sdk所需要的权限</h3>
-
+插件包的引入方式为：
 ```xml
-<!-- 小米Xiaomi推送 start -->
-    <permission android:name="$PACKAGE_NAME.permission.MIPUSH_RECEIVE" android:protectionLevel="signature" />
-    <uses-permission android:name="$PACKAGE_NAME.permission.MIPUSH_RECEIVE" />
-<!-- 小米Xiaomi推送 end -->
-
+<lib-file src="src/android/third-push/vivo/libs/jpush-android-plugin-vivo-v4.6.3.jar" />
+<lib-file src="src/android/third-push/vivo/libs/push_sdk_v3.0.0.4_484.aar" />
 ```
 
-
-#### <h3 id="3">3. 配置小米必须的组件</h3>
+#### <h3 id="3">2. 配置VIVO必须的组件</h3>
 
 ```xml
-<!-- 小米Xiaomi推送 start -->
-<service android:name="com.xiaomi.push.service.XMJobService" android:enabled="true" android:exported="false" android:permission="android.permission.BIND_JOB_SERVICE" android:process=":pushservice"/>
-<service android:name="com.xiaomi.push.service.XMPushService" android:enabled="true" android:process=":pushservice"/>
-<service android:name="com.xiaomi.mipush.sdk.PushMessageHandler" android:enabled="true" android:exported="true"/>
-<service android:name="com.xiaomi.mipush.sdk.MessageHandleService" android:enabled="true"/>
-
-<receiver android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver" android:exported="true">
+<service android:name="com.vivo.push.sdk.service.CommandClientService" android:exported="true" />
+<receiver android:name="cn.jpush.android.service.PluginVivoMessageReceiver">
     <intent-filter>
-        <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-    </intent-filter>
-</receiver>
-<receiver android:name="com.xiaomi.push.service.receivers.PingReceiver" android:exported="false" android:process=":pushservice">
-    <intent-filter>
-        <action android:name="com.xiaomi.push.PING_TIMER"/>
+        <!-- 接收 push 消息 -->
+        <action android:name="com.vivo.pushclient.action.RECEIVE" />
     </intent-filter>
 </receiver>
 
-<!-- 小米Xiaomi推送 end -->
-
-```
-
-```
-	另注：
-	请不要将极光的组件 PushReceiver 配置进程和主进程分离。（按照示例默认配置即可）
-	否则会影响小米 RegId 的获取。
-
+<activity android:name="com.vivo.push.sdk.LinkProxyClientActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 ```
 
 
+#### <h3 id="4">4. 将VIVO应用的 appkey 、appid 填入meta-data 标签中</h3>
 
-#### <h3 id="4">4. 配置JPush接受的小米sdk的消息接受类</h3>
-
-
-```xml
-<receiver android:name="cn.jpush.android.service.PluginXiaomiPlatformsReceiver" android:exported="true">
-    <intent-filter>
-        <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
-    </intent-filter>
-    <intent-filter>
-        <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
-    </intent-filter>
-    <intent-filter>
-        <action android:name="com.xiaomi.mipush.ERROR"/>
-    </intent-filter>
-</receiver>
-```
-***注*** 对于同一个应用集成了多个推送SDK，且其他SDK也使用了小米通道的用户：
-可以将这个极光内置的Receiver，换成自己定义的Receiver。
-这个Receiver必须继承小米的com.xiaomi.mipush.sdk.PushMessageReceiver
-且在每个回调方法，都回调给极光的PluginXiaomiPlatformsReceiver。类似于这样：
 
 ```
-public class XMPushReceiver extends PushMessageReceiver {
+<meta-data android:name="com.vivo.push.app_id" android:value="VIVO_APPID_VALUE" />
+<meta-data android:name="com.vivo.push.api_key" android:value="VIVO_APPKEY_VALUE" />
 
-    final PluginXiaomiPlatformsReceiver receiver = new PluginXiaomiPlatformsReceiver();
+```
 
-    @Override
-    public void onReceivePassThroughMessage(final Context context, final MiPushMessage message) {
-        receiver.onReceivePassThroughMessage(context, message);
+####  <h3 id="5">配置自动集成的vivo.gradle</h3>
+
+由于aar文件需要通过gradle文件进行一个添加导入，跟jar包有所不一样，所以这边需要多做一个gradle的引入文件。
+```
+buildscript {
+    repositories {
+        mavenCentral()
     }
-
-    @Override
-    public void onNotificationMessageClicked(Context context, MiPushMessage message) {
-        receiver.onNotificationMessageClicked(context, message);
-    }
-
-    @Override
-    public void onNotificationMessageArrived(Context context, MiPushMessage message) {
-        receiver.onNotificationMessageArrived(context, message);
-    }
-
-    @Override
-    public void onCommandResult(Context context, MiPushCommandMessage message) {
-        receiver.onCommandResult(context, message);
-    }
-
-    @Override
-    public void onReceiveRegisterResult(Context context, MiPushCommandMessage message) {
-        receiver.onReceiveRegisterResult(context, message);
-    }
-
-
 }
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation(name:'push_sdk_v3.0.0.4_484',ext:'aar')
+}
+
+
 ```
 
+* 在`plugin.xml`中引入vivo.gradle文件
 
-
-#### <h3 id="5">5. 将小米应用的 appkey 和 appid 加上前缀“MI-”，填入meta-data 标签中</h3>
-
-利用nodejs对相应的单词进行key值的替换
 ```xml
-<meta-data android:name="XIAOMI_APPKEY" android:value="MI-XIAOMI_APPKEY_VALUE"/>
-<meta-data android:name="XIAOMI_APPID" android:value="MI-XIAOMI_APPID_VALUE"/>
+<framework src="src/android/third-push/vivo/vivo.gradle" custom="true" type="gradleReference"/>
 ```
 
-## MiPush SDK的编译混淆问题
 
-如果使用了 proguard，需要在配置文件中加入,可以防止一个误报的 warning 导致无法成功编译，
+## VIVO SDK的编译混淆问题
 
-	-dontwarn com.xiaomi.push.**
-	-keep class com.xiaomi.push.** { *; }
-	
-## 点击通知跳转 Activity  
+若需要混淆 app，请在混淆文件中添加以下说明，防止 SDK 内容被二次混淆.
 
-### 功能说明  
+	-dontwarn com.vivo.push.**
+	-keep class com.vivo.push.**{*; }
+	-keep class com.vivo.vms.**{*; }
 
-#### 支持的版本  
+
+## 点击通知跳转 Activity   
+
+### 功能说明   
+
+#### 支持的版本   
 
 此功能从 JPush Android SDK 3.3.8 开始支持
 
-#### 通知跳转的定义  
+#### 通知跳转的定义   
 
-xiaomi push 允许开发者在推送通知的时候传入自定义的 intent uri 字符串，当用户点击了该通知，系统会根据 uri 的值过滤出匹配的 Activity ，并打开 Activity，达到跳转的目的。
+vivo push 允许开发者在推送通知的时候传入自定义的 intent uri 字符串，当用户点击了该通知，系统会根据 uri 的值过滤出匹配的 Activity ，并打开 Activity，达到跳转的目的。
 
 ### 使用方式   
 
-#### Push API 推送说明    
+#### Push API 推送说明   
 
 在 push api 的 payload 中的 "notification" 的 "android" 节点下添加以下字段：
 
@@ -417,4 +365,3 @@ public class OpenClickActivity extends Activity {
     }
 }
 ```
-

@@ -1,13 +1,13 @@
 # 极光官方支持的 cordova 推送插件
 >注意本插件是从官方的渠道fork下来的代码，然后集成了产商推送，解决了在capacitor平台上，ios报错等问题
 >
->注意：插件从 v3.4.0 开始支持 cordova-android 7.0.0，因 cordova-android 7.0.0 修改了 Android 项目结构，因此不兼容之前的版本，升级前请务必注意。
+>注意：本插件是为了兼容ios平台上报错的问题做了修改，所以理论上ios版本不支持安装到cordova的项目，只支持ios，android则不受影响，cordova和capacitor都能使用。
 >
->如果需要在cordova-android 7.0.0之前版本集成最新插件，参照[这篇文章](https://www.jianshu.com/p/23b117ca27a6)
+>注意：本插件不需要安装[cordova-plugin-jcore](https://github.com/jpush/cordova-plugin-jcore)，因为我把`cordova-plugin-jcore`插件的内容都集成在该插件底下了，因此在安装该插件之前，请检查`cordova-plugin-jcore`插件有没有卸载
 >
->如果需要安装之前版本的插件，请先安装 v1.2.0 以下版本（建议安装 v1.1.12）的 [cordova-plugin-jcore](https://github.com/jpush/cordova-plugin-jcore)，再安装旧版本插件（比如 v3.3.2），否则运行会报错。
+>注意：本插件集成的极光的版本为：`JPush Android SDK v4.6.3`和`JPush iOS SDK v3.7.4`,点击了解更多的[SDK版本更新指南](https://docs.jiguang.cn/jpush/jpush_changelog/updates_Android)
 >
->[Cordova Android版本与原生版本对应表](http://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#requirements-and-support)
+>注意：本插件只集成了华为、小米、OPPO、vivo四大厂商通道，其他产商并没集成
 
 # 集成厂商推送
 修改`plugin.xml`#394行附近参数为自己应用后台的信息即可。
@@ -27,6 +27,7 @@ ionic cap sync android
 > 注意：
 > - 应用的包名一定要和 APP_KEY 对应应用的包名一致，否则极光推送服务无法注册成功。
 > - 在使用 8 或以上版本的 Xcode 调试 iOS 项目时，需要先在项目配置界面的 Capabilities 中打开 Push Notifications 开关。
+> - 只支持android版本的安装
 
 - 通过 Cordova Plugins 安装，要求 Cordova CLI 5.0+：
 
@@ -107,9 +108,34 @@ import { JPush } from '@jiguang-ionic/jpush/ngx';
 - [Android](/doc/Android_detail_api.md)
 
 
+### iOS的使用
+> 为了保证在capacitor平台集成极光的ios版本，我们做了很多妥协工作。
+
+1. IOS项目中添加桥接头文件, 如图：
+   ![图 1](doc/res/20220505115138.gif)  
+
+生成的.m文件可以删除
+
+2. 在生成的头文件中导入jpush:
+
+```swift
+#import "JPUSHService.h"
+```
+
+3. Capacitor3.0版本： 在Appdelegate.swift中加入以下代码：
+   ```swift
+   func application(_ application: UIApplication,
+      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        JPUSHService.registerDeviceToken(deviceToken)
+    }
+   ```
+4. 以上准备就绪后，需要手动调用初始化SDK：
+   ```js
+   window.JPush.startJPushSDK() // 可以打印一下window.JPush, 官方支持的API均可以使用
+   ```
 ## FAQ
 
-> 如果遇到了疑问，请优先参考 Demo 和 API 文档。若还无法解决，可到 [Issues](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues) 提问。
+> 如果遇到了疑问，请优先参考 Demo 和 API 文档。若还无法解决，可到 [Issues](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush/issues) 提问。
 
 ### Android
 
@@ -143,17 +169,21 @@ Android 的推送通过长连接的方式实现，只有在保持连接的情况
 > 为什么 QQ、微信之类的应用退出后还能够收到通知？因为这些大厂应用，手机厂商默认都会加入自启动白名单中，也不会在应用退出后杀死它们的相关服务。
 > 如果你多加留意，就会发现非大厂的应用如果你一段时间不用都是收不到推送的。
 
+#### oppo收到离线消息之后，从状态栏打开点击消息内容，无法正常打开app
+怀疑是极光调用的api问题，后面得跟接口配合来进行测试
+
+#### vivo集成厂商第一次能正常得到Vivo regId，第二次打开app之后，反而得不到消息了
+
 ### iOS
+
+#### ios15系统，从状态栏或者横幅点击最新的消息，打开app之后，无法获取信息内容。
+排查的方向:
+1. 先排查接口有没有进行有效传值，` content-available = 1`，[详情](https://gitter.im/jpush/jpush-phonegap-plugin?at=571752345b5164bf56ee346a)
+2. 后期留意官方插件`jpush-phonegap-plugins`有没有ios的最新版SDK的更新，如果有尽量升级到最新的SDK。
 
 #### XCode 10 收不到推送怎么办？
 
 打开 xcode -> file -> WorkSpace Settings… -> Build System 改成 Legacy Build System 然后卸载 App 重新运行。
-
-#### 打包时遇到 i386 打包失败怎么办？
-
-```shell
-cordova platform update ios
-```
 
 #### PushConfig.plist 文件中的字段都是什么意思？
 
@@ -166,22 +196,12 @@ cordova platform update ios
 
 请首先按照正确方式再次配置证书、描述文件，具体可参考 [iOS 证书设置指南](https://docs.jiguang.cn/jpush/client/iOS/ios_cer_guide/)。
 
-#### iOS 集成插件白屏、或无法启动插件、或打包报错无法找到需要引入的文件怎么办？
-
-按照以下步骤逐个尝试：
-
-- 升级至最新版本 Xcode
-- 删除插件、再重装插件（先使用 `cordova platform add ios`，后使用 `cordova plugin add`）
-
 ## Support
 
 - QQ 群：413602425 / 524248013
 - [JPush 官网文档](https://docs.jiguang.cn/jpush/guideline/intro/)
 - [极光社区](http://community.jiguang.cn/)
 
-## Contribute
-
-Please contribute! [Look at the issues](https://github.com/caoguanjie/cordova-plugin-capacitor-jpush.git/issues).
 
 ## License
 
