@@ -1,12 +1,12 @@
 {
     "_args": [
         [
-            "cordova-plugin-capacitor-jpush@4.0.0",
+            "cordova-plugin-capacitor-jpush@4.0.1",
             "C:\\Users\\fits\\Desktop\\MyFrame"
         ]
     ],
     "_from": "file:plugin/cordova-plugin-capacitor-jpush.tar.gz",
-    "_id": "cordova-plugin-capacitor-jpush@4.0.0",
+    "_id": "cordova-plugin-capacitor-jpush@4.0.1",
     "_inBundle": false,
     "_integrity": "sha512-6yj1iJ6ygLi4jeivF2LF66T+BkOPH4+0eZyw+B0pCCV2eNvzC+Ilie+isO34CHuppP4tpeyhVX3GmwpyqF9iAQ==",
     "_location": "/cordova-plugin-capacitor-jpush",
@@ -72,5 +72,5 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "version": "4.0.0"
+    "version": "4.0.1"
 }
