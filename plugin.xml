@@ -160,7 +160,7 @@
             <provider android:authorities="$PACKAGE_NAME.DownloadProvider" android:name="cn.jpush.android.service.DownloadProvider" android:exported="true" />
 
             <!--since 3.3.0 Required SDK核心功能-->
-            <activity android:name="cn.jpush.android.service.JNotifyActivity" android:exported="true" android:taskAffinity="jpush.custom" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <activity android:name="cn.jpush.android.service.JNotifyActivity" android:exported="true" android:taskAffinity="jpush.custom" android:theme="@style/JPushTheme">
                 <intent-filter>
                     <action android:name="cn.jpush.android.intent.JNotifyActivity" />
                     <category android:name="android.intent.category.DEFAULT" />
