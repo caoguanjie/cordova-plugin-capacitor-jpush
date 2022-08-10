@@ -4,16 +4,24 @@ import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.common.ApiException;
+import com.vivo.push.IPushActionListener;
 import com.vivo.push.PushClient;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.heytap.msp.push.HeytapPushManager;
 import com.heytap.msp.push.mode.ErrorCode;
+import com.xiaomi.mipush.sdk.MiPushMessage;
+import com.xiaomi.mipush.sdk.PushMessageHelper;
+
+import cn.fits.plugins.jpush.FitsPushPlugin;
 import cn.jpush.android.service.OPushCallback;
 
 import org.apache.cordova.CallbackContext;
@@ -27,9 +35,11 @@ import org.json.JSONObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -58,6 +68,8 @@ public class JPushPlugin extends CordovaPlugin {
 
     static Map<Integer, CallbackContext> eventCallbackMap = new HashMap<Integer, CallbackContext>();
 
+    String vendorID = "";
+
     public JPushPlugin() {
         instance = this;
     }
@@ -66,11 +78,18 @@ public class JPushPlugin extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         mContext = cordova.getActivity().getApplicationContext();
-        Log.d(TAG, "initialize plugin");
+        Log.d("HJT", "initialize plugin" + FitsPushPlugin.jpushIntent.toString());// 离线拿到intent
 
         // JPushInterface.init(mContext);
 
         cordovaActivity = cordova.getActivity();
+
+        // 用于APP离线时获取厂商通知栏消息数据
+        if (FitsPushPlugin.extras != null && !FitsPushPlugin.extras.isEmpty()) {
+            JPushPlugin.openNotificationTitle = FitsPushPlugin.title;
+            JPushPlugin.openNotificationAlert = FitsPushPlugin.alert;
+            JPushPlugin.openNotificationExtras = getNotificationExtras(FitsPushPlugin.jpushIntent);
+        }
 
         // 如果同时缓存了打开事件 openNotificationAlert 和 消息事件 notificationAlert，只向 UI 发打开事件。
         // 这样做是为了和 iOS 统一。
@@ -91,6 +110,42 @@ public class JPushPlugin extends CordovaPlugin {
         if (notificationAlert != null) {
             transmitNotificationReceive(notificationTitle, notificationAlert, notificationExtras);
         }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 监听接收到的意图，用于app运行时获取通知栏消息
+        if (intent != null) {
+            JPushPlugin.openNotificationTitle = "title";
+            JPushPlugin.openNotificationAlert = "alert";
+            JPushPlugin.openNotificationExtras = getNotificationExtras(intent);
+            Log.d("HJT", "意图改变" + getNotificationExtras(intent).toString());
+        }
+    }
+
+    // 获取通知栏消息额外参数方法转换指定数据结构
+    public static Map getNotificationExtras(Intent intent) {
+
+        Map extrasMap = new HashMap<String, Object>();
+        try {
+            if (Build.MANUFACTURER.toUpperCase().equals("XIAOMI")) {
+                MiPushMessage message = (MiPushMessage) intent.getSerializableExtra(PushMessageHelper.KEY_MESSAGE);
+                if (message != null) {
+                    extrasMap = message.getExtra();
+                } else {
+                    Log.d("HJT", "后台重新打开收到的intent");
+                }
+            } else {
+                for (String key : intent.getExtras().keySet()) {
+                    Log.d("HJT", key);
+                    extrasMap.put(key, intent.getStringExtra(key));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return extrasMap;
     }
 
     @Override
@@ -342,37 +397,295 @@ public class JPushPlugin extends CordovaPlugin {
     void getRegistrationID(JSONArray data, CallbackContext callbackContext) {
         Context context = mContext;
         String regID = JPushInterface.getRegistrationID(context);
-
-        HeytapPushManager.register(context, "30782743", "8621728011d949219a18f6e1b70fa820", new OPushCallback() {
-            @Override
-            public void onRegister(int i, String s) {
-                super.onRegister(i, s);
-                if (i == ErrorCode.SUCCESS) {
-                    // 註冊成功
-                    Log.e("NPL", "註冊成功，registerId=" + s);
-                } else {
-                    // 註冊失敗
-                    Log.e("NPL", "註冊失敗");
-                }
-            }
-        });
-        String oppo = HeytapPushManager.getRegisterID();
-        Log.d("TAG", "欧派id=" + oppo);
-        String vivo = PushClient.getInstance(context).getRegId();
-        Log.d("TAG", "维沃id=" + vivo);
-        String xiaoMi = MiPushClient.getRegId(context);
-        Log.d("Tag", "当前小米id=" + xiaoMi);
-        String huawei = HmsInstanceId.getInstance(context).getToken();
-        Log.d("Tag", "当前华为id=" + huawei);
-
         callbackContext.success(regID);
     }
 
-    void getXiaoMiID(JSONArray data, CallbackContext callbackContext) {
-        Context context = mContext;
-        String xiaoMi = MiPushClient.getRegId(context);
-        Log.d("Tag", "当前小米id" + xiaoMi);
-        callbackContext.success(xiaoMi);
+    // 获取厂商类型
+    void getVendorType(JSONArray data, CallbackContext callbackContext) {
+        callbackContext.success(Build.MANUFACTURER);
+    }
+
+    // 获取厂商别名
+    void getVendorAlias(JSONArray data, CallbackContext callbackContext) {
+        List<String> aliasList = new ArrayList<>();
+        switch (Build.MANUFACTURER.toUpperCase()) {
+            case "OPPO":
+                // ApplicationInfo info = null;
+                // try {
+                // info =
+                // mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(),
+                // PackageManager.GET_META_DATA);
+                // } catch (PackageManager.NameNotFoundException e) {
+                // e.printStackTrace();
+                // }
+                // String OPPO_APPID = info.metaData.getString("OPPO_APPID");
+                // String OPPO_APPKEY = info.metaData.getString("OPPO_APPKEY");
+                // Log.d("TAG", "欧派OPPO_APPKEY=" + OPPO_APPKEY);
+                // Log.d("TAG", "欧派OPPO_APPID=" + OPPO_APPID);
+                // HeytapPushManager.register(mContext, OPPO_APPID,
+                // OPPO_APPKEY,new OPushCallback() {
+                // @Override
+                // public void onRegister(int i, String s) {
+                // super.onRegister(i, s);
+                // if (i == ErrorCode.SUCCESS) {
+                // // vendorID = s;
+                // Log.d("TAG", "欧派id=" + s);
+                // // 註冊成功
+                // Log.e("NPL", "註冊成功，registerId=" + s);
+                // } else {
+                // // 註冊失敗
+                // Log.e("NPL", "註冊失敗");
+                // }
+                // }
+                // });
+                // try {
+                // Thread.sleep(1000L);
+                // } catch (InterruptedException e) {
+                // e.printStackTrace();
+                // }
+                HeytapPushManager.getRegister();
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                aliasList.add(HeytapPushManager.getRegisterID());
+                Log.d("HJT", "欧派别名=" + HeytapPushManager.getRegisterID());
+                break;
+            case "VIVO":
+                aliasList.add(PushClient.getInstance(mContext).getAlias());
+                Log.d("HJT", "维沃别名=" + PushClient.getInstance(mContext).getAlias());
+                break;
+            case "XIAOMI":
+                aliasList = MiPushClient.getAllAlias(mContext);
+                Log.d("HJT", "小米别名数组=" + MiPushClient.getAllAlias(mContext).toString());
+                break;
+            case "HUAWEI":
+                aliasList.add(HmsInstanceId.getInstance(mContext).getToken());
+                Log.d("HJT", "华为别名token=" + HmsInstanceId.getInstance(mContext).getToken());
+                break;
+        }
+        callbackContext.success(String.valueOf(aliasList));
+    }
+
+    // 获取厂商推送注册ID
+    void getVendorID(JSONArray data, CallbackContext callbackContext) {
+        Log.d("TAG", "当前MANUFACTURER厂商" + Build.MANUFACTURER);
+        switch (Build.MANUFACTURER.toUpperCase()) {
+            case "OPPO":
+                try {
+                    // 获取manifest中欧派厂商ID和key值配置
+                    // ApplicationInfo info =
+                    // mContext.getPackageManager().getApplicationInfo(mContext.getPackageName(),
+                    // PackageManager.GET_META_DATA);
+                    // String OPPO_APPID = info.metaData.getString("OPPO_APPID");
+                    // String OPPO_APPKEY = info.metaData.getString("OPPO_APPKEY");
+                    // Log.d("TAG", "欧派OPPO_APPKEY=" + OPPO_APPKEY);
+                    // Log.d("TAG", "欧派OPPO_APPID=" + OPPO_APPID);
+                    // HeytapPushManager.register(mContext, OPPO_APPID,
+                    // OPPO_APPKEY, new OPushCallback() {
+                    // @Override
+                    // public void onRegister(int i, String s) {
+                    // super.onRegister(i, s);
+                    // if (i == ErrorCode.SUCCESS) {
+                    // // vendorID = s;
+                    // Log.d("TAG", "欧派id=" + s);
+                    // // 註冊成功
+                    // Log.e("NPL", "註冊成功，registerId=" + s);
+                    // } else {
+                    // // 註冊失敗
+                    // Log.e("NPL", "註冊失敗");
+                    // }
+                    // }
+                    // });
+                    HeytapPushManager.getRegister();
+                    Thread.sleep(1000L);
+                    vendorID = HeytapPushManager.getRegisterID();
+                    Log.d("TAG", "oppo=" + vendorID);
+                    // } catch (PackageManager.NameNotFoundException e) {
+                    // e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "VIVO":
+                vendorID = PushClient.getInstance(mContext).getRegId();
+                Log.d("TAG", "维沃id=" + PushClient.getInstance(mContext).getRegId());
+                break;
+            case "XIAOMI":
+                vendorID = MiPushClient.getRegId(mContext);
+                Log.d("Tag", "当前小米id=" + MiPushClient.getRegId(mContext));
+                break;
+            case "HUAWEI":
+                vendorID = HmsInstanceId.getInstance(mContext).getToken();
+                Log.d("Tag", "当前华为or荣耀id=" + HmsInstanceId.getInstance(mContext).getToken());
+                break;
+        }
+        callbackContext.success(vendorID);
+    }
+
+    void setVendorAlias(JSONArray data, CallbackContext callbackContext) {
+        // 设置厂商别名
+        Log.d("HJT", "前端参数传入" + data.toString());
+        try {
+            JSONObject jsonObject = data.getJSONObject(0);
+            String alias = jsonObject.getString("alias");
+            Boolean isSuccess = false;
+            // 设置厂商别名
+            switch (Build.MANUFACTURER.toUpperCase()) {
+                case "OPPO":
+                    // 不存在别名用于测试，oppo提供方法能直接设置id
+                    HeytapPushManager.setRegisterID("OPPO_CN_fb75492f0274175b84f2c0017819a123");
+                    // HeytapPushManager.register();
+                    if (HeytapPushManager.getRegisterID().equals(alias)) {
+                        isSuccess = true;
+                    }
+                    break;
+                case "VIVO":
+                    /**
+                     * alias：别名；
+                     * listener: 状态监听。30001 设置别名失败：请打开push开关；30002 设置别名失败：订阅别名为空；30003
+                     * 设置别名失败：别名设置超长，字符长度超过70；
+                     *
+                     * 补充：绑定别名，同一个别名仅能绑定一个regId。当regId已绑定了别名A，若调用此接口绑定别名B，则与别名A的绑定关系会自动解除。
+                     * 此接口与 unBindAlias 一天内最多调用100次，两次调用的间隔需大于2s。
+                     *
+                     */
+                    PushClient.getInstance(mContext).bindAlias(alias, new IPushActionListener() {
+                        @Override
+                        public void onStateChanged(int code) {
+                            switch (code) {
+                                case 30001:
+                                    callbackContext.error("设置别名失败：请打开push开关；");
+                                    break;
+                                case 30002:
+                                    callbackContext.error("设置别名失败：订阅别名为空；");
+                                    break;
+                                case 30003:
+                                    callbackContext.error("设置别名失败：别名设置超长，字符长度超过70；");
+                                    break;
+                                case 0:
+                                    isSuccess = true;
+                                    break;
+                            }
+                        }
+                    });
+                    if (PushClient.getInstance(mContext).getRegId().equals(alias)) {
+                        isSuccess = true;
+                    }
+                    break;
+                case "XIAOMI":
+                    /**
+                     * context Android平台上app的上下文，建议传入当前app的application context
+                     * alias 为指定用户设置别名
+                     * category 扩展参数，暂时没有用途，直接填null
+                     */
+                    Log.d("HJT", "小米json：" + alias);
+                    MiPushClient.setAlias(mContext, alias, null);
+                    Thread.sleep(1000L);
+                    Log.d("HJT", "设置别名后：" + MiPushClient.getAllAlias(mContext));
+                    if (MiPushClient.getAllAlias(mContext).contains(alias)) {
+                        isSuccess = true;
+                    }
+                    break;
+                case "HUAWEI":
+                    Log.d("HJT", "华为无法设置别名，跳过");
+                    break;
+            }
+
+            callbackContext.success(String.valueOf(isSuccess));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    void delVendorAlias(JSONArray data, CallbackContext callbackContext) {
+        // 删除厂商别名
+        try {
+            JSONObject jsonObject = data.getJSONObject(0);
+            String alias = jsonObject.getString("alias");
+            Boolean isSuccess = false;
+            // 删除别名
+            switch (Build.MANUFACTURER.toUpperCase()) {
+                case "OPPO":
+                    // 不存在别名用于测试，oppo提供方法能直接设置id
+                    // HeytapPushManager.setRegisterID("null");
+                    HeytapPushManager.unRegister();
+                    isSuccess = true;
+                    break;
+                case "VIVO":
+                    /**
+                     * alias：别名；
+                     * listener: 状态监听。30001 设置别名失败：请打开push开关；30002 设置别名失败：订阅别名为空；30003
+                     * 设置别名失败：别名设置超长，字符长度超过70；
+                     *
+                     * 补充：绑定别名，同一个别名仅能绑定一个regId。当regId已绑定了别名A，若调用此接口绑定别名B，则与别名A的绑定关系会自动解除。
+                     * 此接口与 unBindAlias 一天内最多调用100次，两次调用的间隔需大于2s。
+                     *
+                     */
+                    PushClient.getInstance(mContext).unBindAlias(alias, new IPushActionListener() {
+                        @Override
+                        public void onStateChanged(int code) {
+                            switch (code) {
+                                case 30001:
+                                    callbackContext.error("删除别名失败：请打开push开关；");
+                                    break;
+                                case 30002:
+                                    callbackContext.error("删除别名失败：订阅别名为空；");
+                                    break;
+                                case 30003:
+                                    callbackContext.error("删除别名失败：别名设置超长，字符长度超过70；");
+                                    break;
+                                case 0:
+                                    isSuccess = true;
+                                    break;
+                            }
+                        }
+                    });
+                    break;
+                case "XIAOMI":
+                    /**
+                     * context Android平台上app的上下文，建议传入当前app的application context
+                     * alias 为指定用户设置别名
+                     * category 扩展参数，暂时没有用途，直接填null
+                     */
+                    Log.d("HJT", "小米取消别名：" + alias);
+                    MiPushClient.unsetAlias(mContext, alias, null);
+                    Thread.sleep(1000L);
+                    if (!MiPushClient.getAllAlias(mContext).contains(alias)) {
+                        isSuccess = true;
+                    }
+                    Log.d("HJT", "小米取消之后的所有别名：" + MiPushClient.getAllAlias(mContext));
+                    break;
+                case "HUAWEI":
+                    isSuccess = true;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(
+                                        mContext.getPackageName(),
+                                        PackageManager.GET_META_DATA);
+                                String HuaWeiSubjectID = info.metaData.getString("com.huawei.hms.client.appid");
+                                HmsInstanceId.getInstance(mContext).deleteToken(HuaWeiSubjectID, "HCM");
+
+                            } catch (PackageManager.NameNotFoundException | ApiException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                    break;
+            }
+            callbackContext.success(String.valueOf(isSuccess));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void onResume(JSONArray data, CallbackContext callbackContext) {

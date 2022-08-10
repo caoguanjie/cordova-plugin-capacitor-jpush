@@ -63,8 +63,24 @@ JPushPlugin.prototype.getRegistrationID = function(successCallback) {
   this.callNative("getRegistrationID", [], successCallback);
 };
 
-JPushPlugin.prototype.getXiaoMiID = function(successCallback) {
-  this.callNative("getXiaoMiID", [], successCallback);
+JPushPlugin.prototype.getVendorType = function(successCallback) {
+  this.callNative("getVendorType", [], successCallback);
+};
+
+JPushPlugin.prototype.getVendorID = function(successCallback) {
+  this.callNative("getVendorID", [], successCallback);
+};
+
+JPushPlugin.prototype.getVendorAlias = function(successCallback) {
+  this.callNative("getVendorAlias", [], successCallback);
+};
+
+JPushPlugin.prototype.setVendorAlias = function(params,successCallback) {
+  this.callNative("setVendorAlias", [params], successCallback);
+};
+
+JPushPlugin.prototype.delVendorAlias = function(params,successCallback) {
+  this.callNative("delVendorAlias", [params], successCallback);
 };
 
 JPushPlugin.prototype.stopPush = function() {

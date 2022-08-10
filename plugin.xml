@@ -18,6 +18,7 @@
 
     <!-- dependencies -->
     <dependency id="cordova-plugin-device" />
+    <!-- <dependency id="fits-cap-jpush"/> -->
 
     <js-module src="www/JPushPlugin.js" name="JPushPlugin">
         <clobbers target="JPush" />
@@ -70,6 +71,8 @@
     </platform>
 
     <platform name="android">
+        <hook type="after_platform_add" src="hooks/AndroidPlatformInit.js"/>
+
         <framework src="src/android/third-push/oppo/oppo.gradle" custom="true" type="gradleReference"/>
         <framework src="src/android/third-push/vivo/vivo.gradle" custom="true" type="gradleReference"/>
         <framework src="src/android/third-push/huawei/huawei.gradle" custom="true" type="gradleReference"/>
@@ -160,7 +163,7 @@
             <provider android:authorities="$PACKAGE_NAME.DownloadProvider" android:name="cn.jpush.android.service.DownloadProvider" android:exported="true" />
 
             <!--since 3.3.0 Required SDK核心功能-->
-            <activity android:name="cn.jpush.android.service.JNotifyActivity" android:exported="true" android:taskAffinity="jpush.custom" android:theme="@style/JPushTheme">
+            <activity android:name="cn.jpush.android.service.JNotifyActivity" android:exported="true" android:taskAffinity="jpush.custom" android:theme="@android:style/Theme.Translucent.NoTitleBar">
                 <intent-filter>
                     <action android:name="cn.jpush.android.intent.JNotifyActivity" />
                     <category android:name="android.intent.category.DEFAULT" />
@@ -384,6 +387,20 @@
         <source-file src="src/android/JPushReceiver.java" target-dir="src/cn/jiguang/cordova/push" />
         <source-file src="src/android/JPushEventReceiver.java" target-dir="src/cn/jiguang/cordova/push" />
         <source-file src="src/android/JLogger.java" target-dir="src/cn/jiguang/cordova/push" />
+        <source-file src="src/android/MiMessageReceiver.java" target-dir="src/cn/jiguang/cordova/push" />
+
+        <!-- 小米推送接受到消息后点击的回调，以及-相关别名（未开发）-操作 -->
+        <receiver android:name="cn.jiguang.cordova.push.MiMessageReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+                <action android:name="com.xiaomi.mipush.ERROR" />
+            </intent-filter>
+        </receiver>
+
+        <source-file src="src/android/third-push/huawei/huawei.gradle" target-dir="../../third-push/huawei" />
+        <source-file src="src/android/third-push/oppo/oppo.gradle" target-dir="../../third-push/oppo" />
+        <source-file src="src/android/third-push/vivo/vivo.gradle" target-dir="../../third-push/vivo" />
 
         <resource-file src="src/android/libs/arm64-v8a/libjcore322.so" target="jniLibs/arm64-v8a/libjcore322.so"/>
         <resource-file src="src/android/libs/arm64-v8a/libquicklogin.so" target="jniLibs/arm64-v8a/libquicklogin.so"/>
