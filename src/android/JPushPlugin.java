@@ -408,6 +408,7 @@ public class JPushPlugin extends CordovaPlugin {
     // 获取厂商别名
     void getVendorAlias(JSONArray data, CallbackContext callbackContext) {
         List<String> aliasList = new ArrayList<>();
+        String alias = "";
         switch (Build.MANUFACTURER.toUpperCase()) {
             case "OPPO":
                 // ApplicationInfo info = null;
@@ -450,22 +451,28 @@ public class JPushPlugin extends CordovaPlugin {
                     e.printStackTrace();
                 }
                 aliasList.add(HeytapPushManager.getRegisterID());
+                alias = HeytapPushManager.getRegisterID();
                 Log.d("HJT", "欧派别名=" + HeytapPushManager.getRegisterID());
                 break;
             case "VIVO":
                 aliasList.add(PushClient.getInstance(mContext).getAlias());
+                alias = PushClient.getInstance(mContext).getAlias();
                 Log.d("HJT", "维沃别名=" + PushClient.getInstance(mContext).getAlias());
                 break;
             case "XIAOMI":
                 aliasList = MiPushClient.getAllAlias(mContext);
+                if (MiPushClient.getAllAlias(mContext).size() > 0) {
+                    alias = MiPushClient.getAllAlias(mContext).get(MiPushClient.getAllAlias(mContext).size() - 1);
+                }
                 Log.d("HJT", "小米别名数组=" + MiPushClient.getAllAlias(mContext).toString());
                 break;
             case "HUAWEI":
                 aliasList.add(HmsInstanceId.getInstance(mContext).getToken());
+                alias = HmsInstanceId.getInstance(mContext).getToken();
                 Log.d("HJT", "华为别名token=" + HmsInstanceId.getInstance(mContext).getToken());
                 break;
         }
-        callbackContext.success(String.valueOf(aliasList));
+        callbackContext.success(String.valueOf(alias));
     }
 
     // 获取厂商推送注册ID
@@ -535,11 +542,13 @@ public class JPushPlugin extends CordovaPlugin {
             switch (Build.MANUFACTURER.toUpperCase()) {
                 case "OPPO":
                     // 不存在别名用于测试，oppo提供方法能直接设置id
-                    HeytapPushManager.setRegisterID("OPPO_CN_fb75492f0274175b84f2c0017819a123");
-                    // HeytapPushManager.register();
-                    if (HeytapPushManager.getRegisterID().equals(alias)) {
-                        isSuccess = true;
-                    }
+                    // HeytapPushManager.setRegisterID("OPPO_CN_fb75492f0274175b84f2c0017819a123");
+                    // // HeytapPushManager.register();
+                    // if (HeytapPushManager.getRegisterID().equals(alias)) {
+                    // isSuccess = true;
+                    // }
+                    Log.d("HJT", "OPPO无法设置别名，跳过");
+                    isSuccess = true;
                     break;
                 case "VIVO":
                     /**
@@ -564,13 +573,11 @@ public class JPushPlugin extends CordovaPlugin {
                                 case 30003:
                                     callbackContext.error("设置别名失败：别名设置超长，字符长度超过70；");
                                     break;
-                                case 0:
-                                    isSuccess = true;
-                                    break;
                             }
                         }
                     });
-                    if (PushClient.getInstance(mContext).getRegId().equals(alias)) {
+                    Thread.sleep(1000L);
+                    if (PushClient.getInstance(mContext).getAlias().equals(alias)) {
                         isSuccess = true;
                     }
                     break;
@@ -590,6 +597,7 @@ public class JPushPlugin extends CordovaPlugin {
                     break;
                 case "HUAWEI":
                     Log.d("HJT", "华为无法设置别名，跳过");
+                    isSuccess = true;
                     break;
             }
 
@@ -639,12 +647,13 @@ public class JPushPlugin extends CordovaPlugin {
                                 case 30003:
                                     callbackContext.error("删除别名失败：别名设置超长，字符长度超过70；");
                                     break;
-                                case 0:
-                                    isSuccess = true;
-                                    break;
                             }
                         }
                     });
+                    Thread.sleep(1000L);
+                    if (TextUtils.isEmpty(PushClient.getInstance(mContext).getAlias())) {
+                        isSuccess = true;
+                    }
                     break;
                 case "XIAOMI":
                     /**
