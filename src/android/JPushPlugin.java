@@ -444,15 +444,15 @@ public class JPushPlugin extends CordovaPlugin {
                 // } catch (InterruptedException e) {
                 // e.printStackTrace();
                 // }
-                HeytapPushManager.getRegister();
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                aliasList.add(HeytapPushManager.getRegisterID());
-                alias = HeytapPushManager.getRegisterID();
-                Log.d("HJT", "欧派别名=" + HeytapPushManager.getRegisterID());
+                // HeytapPushManager.getRegister();
+                // try {
+                // Thread.sleep(1000L);
+                // } catch (InterruptedException e) {
+                // e.printStackTrace();
+                // }
+                // aliasList.add(HeytapPushManager.getRegisterID());
+                // alias = HeytapPushManager.getRegisterID();
+                // Log.d("HJT", "欧派别名=" + HeytapPushManager.getRegisterID());
                 break;
             case "VIVO":
                 aliasList.add(PushClient.getInstance(mContext).getAlias());
@@ -467,9 +467,9 @@ public class JPushPlugin extends CordovaPlugin {
                 Log.d("HJT", "小米别名数组=" + MiPushClient.getAllAlias(mContext).toString());
                 break;
             case "HUAWEI":
-                aliasList.add(HmsInstanceId.getInstance(mContext).getToken());
-                alias = HmsInstanceId.getInstance(mContext).getToken();
-                Log.d("HJT", "华为别名token=" + HmsInstanceId.getInstance(mContext).getToken());
+                // aliasList.add(HmsInstanceId.getInstance(mContext).getToken());
+                // alias = HmsInstanceId.getInstance(mContext).getToken();
+                // Log.d("HJT", "华为别名token=" + HmsInstanceId.getInstance(mContext).getToken());
                 break;
         }
         callbackContext.success(String.valueOf(alias));
