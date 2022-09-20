@@ -59,28 +59,28 @@ JPushPlugin.prototype.setDebugMode = function(mode) {
   }
 };
 
-JPushPlugin.prototype.getRegistrationID = function(successCallback) {
-  this.callNative("getRegistrationID", [], successCallback);
+JPushPlugin.prototype.getRegistrationID = function(successCallback,errorCallback) {
+  this.callNative("getRegistrationID", [], successCallback,errorCallback);
 };
 
-JPushPlugin.prototype.getVendorType = function(successCallback) {
-  this.callNative("getVendorType", [], successCallback);
+JPushPlugin.prototype.getVendorType = function(successCallback,errorCallback) {
+  this.callNative("getVendorType", [], successCallback,errorCallback);
 };
 
-JPushPlugin.prototype.getVendorID = function(successCallback) {
-  this.callNative("getVendorID", [], successCallback);
+JPushPlugin.prototype.getVendorID = function(successCallback,errorCallback) {
+  this.callNative("getVendorID", [], successCallback,errorCallback);
 };
 
-JPushPlugin.prototype.getVendorAlias = function(successCallback) {
-  this.callNative("getVendorAlias", [], successCallback);
+JPushPlugin.prototype.getVendorAlias = function(successCallback,errorCallback) {
+  this.callNative("getVendorAlias", [], successCallback,errorCallback);
 };
 
-JPushPlugin.prototype.setVendorAlias = function(params,successCallback) {
-  this.callNative("setVendorAlias", [params], successCallback);
+JPushPlugin.prototype.setVendorAlias = function(params,successCallback,errorCallback) {
+  this.callNative("setVendorAlias", [params], successCallback,errorCallback);
 };
 
-JPushPlugin.prototype.delVendorAlias = function(params,successCallback) {
-  this.callNative("delVendorAlias", [params], successCallback);
+JPushPlugin.prototype.delVendorAlias = function(params,successCallback,errorCallback) {
+  this.callNative("delVendorAlias", [params], successCallback,errorCallback);
 };
 
 JPushPlugin.prototype.stopPush = function() {
