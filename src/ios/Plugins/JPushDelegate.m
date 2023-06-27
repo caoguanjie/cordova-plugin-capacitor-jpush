@@ -16,7 +16,12 @@
 @implementation JPushDelegate
 
 static JPushDelegate* _instance = nil;
-
+// 初始化 全局变量
+ NSString * _Nonnull deviceTokenAPNS = @"";
+// 实现setter方法
+void setDeviceTokenAPNS(NSString * _Nonnull value) {
+    deviceTokenAPNS = value;
+}
 +(JPushDelegate*) getInstance {
     if (!_instance) {
         _instance = [[JPushDelegate alloc] init];
@@ -76,6 +81,7 @@ NSDictionary *_launchOptions;
 }
 
 -(void)startJPushSDK{
+    NSLog(@"我来到这里: %@\n");
     [self registerForRemoteNotification];
     [JPushPlugin setupJPushSDK:_launchOptions];
 }

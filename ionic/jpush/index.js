@@ -27,6 +27,7 @@ var JPushOriginal = /** @class */ (function(_super) {
     JPushOriginal.prototype.init = function() { return cordova(this, "init", { "sync": true, "platforms": ["iOS", "Android"] }, arguments); };
     JPushOriginal.prototype.setDebugMode = function(enable) { return cordova(this, "setDebugMode", { "sync": true, "platforms": ["iOS", "Android"] }, arguments); };
     JPushOriginal.prototype.getRegistrationID = function() { return cordova(this, "getRegistrationID", {}, arguments); };
+    JPushOriginal.prototype.getRegistrationDeviceToken = function() { return cordova(this, "getRegistrationDeviceToken", {}, arguments); };
     JPushOriginal.prototype.stopPush = function() { return cordova(this, "stopPush", {}, arguments); };
     JPushOriginal.prototype.resumePush = function() { return cordova(this, "resumePush", {}, arguments); };
     JPushOriginal.prototype.isPushStopped = function() { return cordova(this, "isPushStopped", {}, arguments); };

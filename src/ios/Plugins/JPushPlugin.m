@@ -324,6 +324,10 @@
     NSString* registrationID = [JPUSHService registrationID];
     [self handleResultWithValue:registrationID command:command];
 }
+-(void)getRegistrationDeviceToken:(CDVInvokedUrlCommand*)command{
+    NSString* deviceToken = deviceTokenAPNS;
+    [self handleResultWithValue:deviceToken command:command];
+}
 
 -(void)startLogPageView:(CDVInvokedUrlCommand*)command{
     NSString * pageName = [command argumentAtIndex:0];

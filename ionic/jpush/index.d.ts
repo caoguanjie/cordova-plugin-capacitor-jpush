@@ -39,6 +39,7 @@ export declare class JPushOriginal extends IonicNativePlugin {
     init(): void;
     setDebugMode(enable: boolean): void;
     getRegistrationID(): Promise<any>;
+    getRegistrationDeviceToken(): Promise<any>;
     stopPush(): Promise<any>;
     resumePush(): Promise<any>;
     isPushStopped(): Promise<any>;

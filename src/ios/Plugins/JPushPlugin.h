@@ -32,7 +32,8 @@ static NSMutableDictionary *_jpushEventCache;
 
 //获取 RegistrationID
 -(void)getRegistrationID:(CDVInvokedUrlCommand*)command;
-
+// 获取device toke
+-(void)getRegistrationDeviceToken:(CDVInvokedUrlCommand*)command;
 //页面统计
 -(void)startLogPageView:(CDVInvokedUrlCommand*)command;
 -(void)stopLogPageView:(CDVInvokedUrlCommand*)command;
